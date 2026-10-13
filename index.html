@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shree Self Drive - Tools</title>
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="brandbar">
+    <div class="logo">🚗</div>
+    <div class="brand-text">
+      <h1>Shree Self Driving &amp; Car Rental Service</h1>
+      <p>Tools</p>
+    </div>
+    <button class="theme-toggle" type="button" data-theme-toggle>☀️ Light mode</button>
+  </div>
+
+  <div class="hub-head">
+    <h2>My Tools</h2>
+    <p>All the tools in one place. Pick a tool to open it.</p>
+  </div>
+
+  <div class="tool-grid" id="tools"></div>
+
+  <p class="foot">Shree Self Drive &middot; static site, works offline after load.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* Add a tool by adding one entry here. Remove an entry to hide it.
+     Optional "soon: true" shows it as a non-clickable placeholder. */
+  var TOOLS = [
+    {
+      icon: '\uD83D\uDE97',
+      name: 'Quotation Calculator',
+      desc: 'Create a self-drive quotation with auto calculation, customer name, offer/discount and a one-page PDF.',
+      href: 'quote/index.html'
+    },
+    {
+      icon: '\uD83E\uDDEA',
+      name: 'Calculation Tests',
+      desc: 'Run the billing, discount and WhatsApp-template test suite.',
+      href: 'tests.html'
+    },
+    {
+      icon: '\uD83D\uDCC5',
+      name: 'Booking Calendar',
+      desc: 'See and manage upcoming self-drive bookings.',
+      soon: true
+    },
+    {
+      icon: '\uD83E\uDDFE',
+      name: 'Invoice Generator',
+      desc: 'Turn a confirmed quotation into an invoice.',
+      soon: true
+    }
+  ];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var html = TOOLS.map(function (t) {
+    var inner = '<div class="ti">' + esc(t.icon) + '</div>' +
+      '<h3>' + esc(t.name) + '</h3>' +
+      '<p>' + esc(t.desc) + '</p>';
+    if (t.soon) {
+      return '<div class="card tool-card soon" aria-disabled="true">' + inner +
+        '<span class="go">Coming soon</span></div>';
+    }
+    return '<a class="card tool-card" href="' + esc(t.href) + '">' + inner +
+      '<span class="go">Open \u2192</span></a>';
+  }).join('');
+
+  document.getElementById('tools').innerHTML = html;
+})();
+</script>
+</body>
+</html>

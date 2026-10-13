@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quotation Calculator - Shree Self Drive</title>
+<link rel="stylesheet" href="../styles.css">
+<script src="../theme.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="brandbar">
+    <div class="logo">🚗</div>
+    <div class="brand-text">
+      <h1>Quotation Calculator</h1>
+      <p><a href="../index.html">&larr; Home</a> &nbsp;|&nbsp; <a href="../tests.html">Tests</a></p>
+    </div>
+    <button class="theme-toggle" type="button" data-theme-toggle>☀️ Light mode</button>
+  </div>
+
+  <div class="layout">
+    <!-- ================= INPUTS ================= -->
+    <form class="card panel" id="form" autocomplete="off" onsubmit="return false;">
+      <div class="section-title">Business</div>
+      <div class="field">
+        <label for="bizName">Business name</label>
+        <input type="text" id="bizName" value="SHREE SELF DRIVING &amp; CAR RENTAL SERVICE">
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="vehType">Rental type</label>
+          <input type="text" id="vehType" value="Self Drive">
+        </div>
+        <div class="field">
+          <label for="bizPhone">Contact phone (optional)</label>
+          <input type="tel" id="bizPhone" value="">
+        </div>
+      </div>
+
+      <div class="section-title">Customer</div>
+      <div class="grid2">
+        <div class="field">
+          <label for="customerName">Customer name</label>
+          <input type="text" id="customerName" value="" placeholder="e.g. Rahul Sharma">
+        </div>
+        <div class="field">
+          <label for="quotationDate">Quotation date</label>
+          <input type="date" id="quotationDate">
+        </div>
+      </div>
+
+      <div class="section-title">Vehicle</div>
+      <div class="field">
+        <label for="vehName">Vehicle</label>
+        <input type="text" id="vehName" value="Maruti Suzuki WagonR LXI 2025">
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="vehFuel">Fuel type</label>
+          <input type="text" id="vehFuel" value="Petrol / CNG">
+        </div>
+        <div class="field">
+          <label for="vehSeats">Seating capacity</label>
+          <input type="text" id="vehSeats" value="5 Seater">
+        </div>
+      </div>
+
+      <div class="section-title">Trip (12-hour time)</div>
+      <div class="field">
+        <label for="pickupDate">Pickup date &amp; time</label>
+        <div class="dt">
+          <input type="date" id="pickupDate" value="2026-10-14">
+          <div class="dt-time">
+            <select id="pickupHour" class="dt-hour" aria-label="Pickup hour"></select>
+            <span class="sep">:</span>
+            <select id="pickupMin" class="dt-min" aria-label="Pickup minutes"></select>
+            <select id="pickupAmPm" class="dt-ampm" aria-label="Pickup AM or PM">
+              <option value="AM">AM</option>
+              <option value="PM" selected>PM</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="returnDate">Return date &amp; time</label>
+        <div class="dt">
+          <input type="date" id="returnDate" value="2026-10-17">
+          <div class="dt-time">
+            <select id="returnHour" class="dt-hour" aria-label="Return hour"></select>
+            <span class="sep">:</span>
+            <select id="returnMin" class="dt-min" aria-label="Return minutes"></select>
+            <select id="returnAmPm" class="dt-ampm" aria-label="Return AM or PM">
+              <option value="AM">AM</option>
+              <option value="PM" selected>PM</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Rates</div>
+      <div class="grid2">
+        <div class="field">
+          <label for="ratePerDay">Rate per day (₹)</label>
+          <input type="number" id="ratePerDay" min="0" step="1" value="1500">
+        </div>
+        <div class="field">
+          <label for="extraHourRate">Extra hour rate (₹)</label>
+          <input type="number" id="extraHourRate" min="0" step="1" value="100">
+        </div>
+        <div class="field">
+          <label for="includedKM">Included KM limit</label>
+          <input type="number" id="includedKM" min="0" step="1" value="650">
+        </div>
+        <div class="field">
+          <label for="extraKMRate">Extra KM rate (₹ / km)</label>
+          <input type="number" id="extraKMRate" min="0" step="1" value="7">
+        </div>
+        <div class="field">
+          <label for="deposit">Refundable deposit (₹)</label>
+          <input type="number" id="deposit" min="0" step="1" value="4000">
+        </div>
+        <div class="field">
+          <label for="token">Token received (₹)</label>
+          <input type="number" id="token" min="0" step="1" value="1000">
+        </div>
+      </div>
+
+      <div class="section-title">Offer / Discount</div>
+      <div class="grid2">
+        <div class="field">
+          <label for="discountType">Discount type</label>
+          <select id="discountType">
+            <option value="amount">Amount (₹)</option>
+            <option value="percent">Percent (%)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="discountValue">Discount value</label>
+          <input type="number" id="discountValue" min="0" step="1" value="0">
+        </div>
+      </div>
+
+      <div class="section-title">Terms &amp; conditions</div>
+      <div class="field">
+        <textarea id="terms" rows="7">Remaining rental amount and security deposit must be paid at vehicle handover.
+The {deposit} security deposit is refundable after vehicle return and inspection, subject to applicable deductions.
+The package includes {includedKM} KM. Extra KM will be charged at {extraKMRate} per KM.
+Extra hours are charged at {extraHourRate} per hour.
+A valid original Driving Licence and Government ID Proof are mandatory.
+Fuel, toll, parking and challan charges are the customer's responsibility.
+Vehicle condition and KM reading will be checked at handover and return.</textarea>
+        <p class="small muted">Placeholders: {deposit}, {includedKM}, {extraKMRate}, {extraHourRate}, {rate}</p>
+      </div>
+    </form>
+
+    <!-- ================= PREVIEW ================= -->
+    <div class="preview-col">
+      <div class="summary" id="summary"></div>
+      <div class="actions">
+        <button class="btn" id="btnCopy" type="button">📋 Copy</button>
+        <button class="btn wa" id="btnWa" type="button">🟢 WhatsApp</button>
+        <button class="btn ghost" id="btnPdf" type="button">⬇️ Download PDF</button>
+        <button class="btn ghost" id="btnReset" type="button">↺ Reset</button>
+      </div>
+      <div class="banner" id="banner"><span>⚠️</span><span id="bannerText"></span></div>
+      <div class="quote-card" id="quote"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../calc.js"></script>
+<script>
+(function () {
+  'use strict';
+  var RC = window.RentalCalc;
+  var $ = function (id) { return document.getElementById(id); };
+  var val = function (id) { return ($(id).value || '').trim(); };
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  /* Populate the 12-hour time selects and apply sensible defaults. */
+  function buildTimeSelects() {
+    var hours = '', mins = '';
+    for (var h = 1; h <= 12; h++) hours += '<option value="' + h + '">' + pad(h) + '</option>';
+    for (var m = 0; m < 60; m += 5) mins += '<option value="' + pad(m) + '">' + pad(m) + '</option>';
+    ['pickupHour', 'returnHour'].forEach(function (id) { $(id).innerHTML = hours; });
+    ['pickupMin', 'returnMin'].forEach(function (id) { $(id).innerHTML = mins; });
+  }
+
+  function applyDefaults() {
+    if (!val('quotationDate')) $('quotationDate').value = todayISO();
+    $('pickupHour').value = '3';
+    $('pickupMin').value = '00';
+    $('pickupAmPm').value = 'PM';
+    $('returnHour').value = '8';
+    $('returnMin').value = '00';
+    $('returnAmPm').value = 'PM';
+  }
+
+  /* Combine date + 12-hour time into a local "YYYY-MM-DDTHH:mm" string. */
+  function combine(dateId, hourId, minId, ampmId) {
+    var date = val(dateId);
+    if (!date) return '';
+    var h12 = parseInt($(hourId).value, 10);
+    if (!isFinite(h12)) h12 = 12;
+    var h = h12 % 12;
+    if ($(ampmId).value === 'PM') h += 12;
+    return date + 'T' + pad(h) + ':' + $(minId).value;
+  }
+
+  function readInputs() {
+    return {
+      bizName: val('bizName') || 'SHREE SELF DRIVING & CAR RENTAL SERVICE',
+      bizPhone: val('bizPhone'),
+      customerName: val('customerName'),
+      quotationDate: val('quotationDate'),
+      vehType: val('vehType') || 'Self Drive',
+      vehName: val('vehName'),
+      vehFuel: val('vehFuel'),
+      vehSeats: val('vehSeats'),
+      pickup: combine('pickupDate', 'pickupHour', 'pickupMin', 'pickupAmPm'),
+      return: combine('returnDate', 'returnHour', 'returnMin', 'returnAmPm'),
+      ratePerDay: val('ratePerDay'),
+      extraHourRate: val('extraHourRate'),
+      includedKM: val('includedKM'),
+      extraKMRate: val('extraKMRate'),
+      deposit: val('deposit'),
+      token: val('token'),
+      discountType: $('discountType').value,
+      discountValue: val('discountValue'),
+      terms: val('terms')
+    };
+  }
+
+  /* HTML renderer for the shared view (calc.js buildView). */
+  function renderHtml(view) {
+    var div = '<div class="q-div"></div>';
+    var row = function (label, value, cls) {
+      return '<div class="q-row ' + (cls || '') + '"><span class="lbl">' + esc(label) +
+        '</span><span class="val">' + esc(value) + '</span></div>';
+    };
+    var h = '<div class="q-head"><div class="q-emoji">\uD83D\uDE97</div><h2>' + esc(view.bizName) + '</h2>';
+    h += '<div class="q-sub">' + esc(view.sub) + ' QUOTATION</div></div>';
+
+    view.sections.forEach(function (sec) {
+      h += div + '<div class="q-sec-title">' + esc(sec.title) + '</div>';
+      sec.rows.forEach(function (r) {
+        h += row(r.label, r.value, r.bold ? 'total' : (r.credit ? 'credit' : (r.labelBold ? 'lblbold' : '')));
+      });
+    });
+
+    h += div;
+    h += '<div class="q-payable">\u2705 ' + esc(view.payable.label) + ': <span class="amt">' + esc(view.payable.value) + '</span></div>';
+    h += div + '<div class="q-sec-title">' + esc(view.termsTitle) + '</div><ul class="q-terms">';
+    view.terms.forEach(function (t) { h += '<li>' + esc(t) + '</li>'; });
+    h += '</ul>';
+    h += div + '<div class="q-thanks"><div class="big">\uD83D\uDE4F THANK YOU!</div>' +
+      '<div>Thank you for choosing <b>' + esc(view.bizName) + '.</b></div>' +
+      '<div class="small muted">We look forward to providing you with a safe and comfortable self-drive experience. \uD83D\uDE97</div></div>';
+    if (view.phone) h += '<div class="q-phone">\uD83D\uDCDE Bookings / Enquiries: ' + esc(view.phone) + '</div>';
+    return h;
+  }
+
+  function renderSummary(calc, ok) {
+    var chip = function (k, v) {
+      return '<div class="chip"><div class="k">' + k + '</div><div class="v mono-nums">' + esc(ok ? v : '\u2014') + '</div></div>';
+    };
+    $('summary').innerHTML =
+      chip('Duration', calc.days + 'd' + (calc.extraHours > 0 ? ' ' + calc.extraHours + 'h' : '')) +
+      chip('Days', calc.days) +
+      chip('Extra hrs', calc.extraHours) +
+      chip('Payable', RC.formatINR(calc.payable));
+  }
+
+  function errorCard(message) {
+    return '<div class="q-head"><div class="q-emoji">\u26A0\uFE0F</div>' +
+      '<h2>Cannot build quotation</h2><div class="q-error">' + esc(message) + '</div></div>';
+  }
+
+  var lastText = '';
+
+  function update() {
+    var inputs = readInputs();
+    var calc = RC.compute(inputs);
+    var ok = !calc.error;
+
+    renderSummary(calc, ok);
+
+    if (ok) {
+      var view = RC.buildView(inputs, calc);
+      lastText = RC.buildText(view);
+      $('quote').innerHTML = renderHtml(view);
+      $('banner').classList.remove('show');
+    } else {
+      lastText = '';
+      $('quote').innerHTML = errorCard(calc.error);
+      $('bannerText').textContent = calc.error;
+      $('banner').classList.add('show');
+    }
+
+    ['btnCopy', 'btnWa', 'btnPdf'].forEach(function (id) {
+      $(id).disabled = !ok;
+      $(id).style.opacity = ok ? '' : '.5';
+      $(id).style.pointerEvents = ok ? '' : 'none';
+    });
+  }
+
+  /* ---------- actions ---------- */
+  $('btnCopy').addEventListener('click', function () {
+    var btn = this;
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = '\u2705 Copied';
+      setTimeout(function () { btn.textContent = old; }, 1400);
+    };
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = lastText;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { alert('Copy failed. Please copy manually.'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(done, fallback);
+    } else { fallback(); }
+  });
+
+  $('btnWa').addEventListener('click', function () {
+    window.open('https://wa.me/?text=' + encodeURIComponent(lastText), '_blank');
+  });
+
+  $('btnPdf').addEventListener('click', function () { window.print(); });
+
+  $('btnReset').addEventListener('click', function () {
+    $('form').reset();
+    applyDefaults();
+    update();
+  });
+
+  /* live update on any change */
+  $('form').addEventListener('input', update);
+  $('form').addEventListener('change', update);
+
+  buildTimeSelects();
+  applyDefaults();
+  update();
+})();
+</script>
+</body>
+</html>

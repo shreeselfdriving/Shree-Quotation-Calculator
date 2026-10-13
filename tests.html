@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tests - Self Drive Quotation Calculator</title>
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="brandbar">
+    <div class="logo">🧪</div>
+    <div class="brand-text">
+      <h1>Calculation tests</h1>
+      <p><a href="index.html">&larr; Home</a> &nbsp;|&nbsp; <a href="quote/index.html">Calculator</a></p>
+    </div>
+    <button class="theme-toggle" type="button" data-theme-toggle>☀️ Light mode</button>
+  </div>
+
+  <div id="result"></div>
+  <div id="cases"></div>
+</div>
+
+<script src="calc.js"></script>
+<script>
+(function () {
+  'use strict';
+  var RC = window.RentalCalc;
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  var base = { pickup: '2026-10-14T15:00', return: '2026-10-17T20:00', ratePerDay: 1500, extraHourRate: 100, deposit: 4000, token: 1000 };
+
+  var cases = [
+    {
+      name: 'Sample - 77 hours over 3 days',
+      input: base,
+      expect: { totalHours: 77, days: 3, includedHours: 72, extraHours: 5, rental: 4500, extraHourCharge: 500, totalRental: 5000, payable: 8000, error: null }
+    },
+    {
+      name: 'Exactly 24 hours - 1 day, no extra hours',
+      input: { pickup: '2026-10-01T10:00', return: '2026-10-02T10:00', ratePerDay: 1200, extraHourRate: 80, deposit: 3000, token: 0 },
+      expect: { totalHours: 24, days: 1, includedHours: 24, extraHours: 0, rental: 1200, extraHourCharge: 0, totalRental: 1200, payable: 4200, error: null }
+    },
+    {
+      name: 'Under 24 hours - minimum 1 day applies',
+      input: { pickup: '2026-10-01T10:00', return: '2026-10-01T18:00', ratePerDay: 1000, extraHourRate: 100, deposit: 2000, token: 500 },
+      expect: { totalHours: 8, days: 1, includedHours: 24, extraHours: 0, rental: 1000, extraHourCharge: 0, totalRental: 1000, payable: 2500, error: null }
+    },
+    {
+      name: 'Partial hours round up (50.5h -> 51h, 3 extra hours)',
+      input: { pickup: '2026-10-10T09:30', return: '2026-10-12T12:00', ratePerDay: 1800, extraHourRate: 150, deposit: 5000, token: 1000 },
+      expect: { totalHours: 51, days: 2, includedHours: 48, extraHours: 3, rental: 3600, extraHourCharge: 450, totalRental: 4050, payable: 8050, error: null }
+    },
+    {
+      name: 'Invalid - return before pickup',
+      input: { pickup: '2026-10-05T10:00', return: '2026-10-04T10:00', ratePerDay: 1000, extraHourRate: 100, deposit: 0, token: 0 },
+      expect: { error: 'Return date/time must be after the pickup date/time.' }
+    },
+    {
+      name: 'Invalid - missing dates',
+      input: { pickup: '', return: '', ratePerDay: 1500, extraHourRate: 100, deposit: 4000, token: 1000 },
+      expect: { error: 'Enter both pickup and return date/time.' }
+    },
+    {
+      name: 'Invalid - empty rate per day',
+      input: { pickup: '2026-10-14T15:00', return: '2026-10-17T20:00', ratePerDay: '', extraHourRate: 100, deposit: 4000, token: 1000 },
+      expect: { error: 'Enter a valid rate per day.' }
+    },
+    {
+      name: 'Negative deposit/token clamped to 0',
+      input: { pickup: '2026-10-14T15:00', return: '2026-10-17T20:00', ratePerDay: 1500, extraHourRate: 100, deposit: -1000, token: -500 },
+      expect: { error: null, deposit: 0, token: 0, payable: 5000 }
+    },
+    {
+      name: 'Offer - 10% percent discount',
+      input: { pickup: '2026-10-14T15:00', return: '2026-10-17T20:00', ratePerDay: 1500, extraHourRate: 100, deposit: 4000, token: 1000, discountType: 'percent', discountValue: 10 },
+      expect: { totalRental: 5000, discount: 500, payable: 7500 }
+    },
+    {
+      name: 'Offer - flat amount discount',
+      input: { pickup: '2026-10-14T15:00', return: '2026-10-17T20:00', ratePerDay: 1500, extraHourRate: 100, deposit: 4000, token: 1000, discountType: 'amount', discountValue: 1000 },
+      expect: { totalRental: 5000, discount: 1000, payable: 7000 }
+    },
+    {
+      name: 'Offer - discount capped at rental amount',
+      input: { pickup: '2026-10-14T15:00', return: '2026-10-17T20:00', ratePerDay: 1500, extraHourRate: 100, deposit: 4000, token: 1000, discountType: 'amount', discountValue: 99999 },
+      expect: { totalRental: 5000, discount: 5000, payable: 3000 }
+    },
+    {
+      name: 'WhatsApp template output (sample)',
+      input: {
+        bizName: 'SHREE SELF DRIVING & CAR RENTAL SERVICE',
+        vehType: 'Self Drive',
+        vehName: 'Maruti Suzuki WagonR LXI 2025',
+        vehFuel: 'Petrol / CNG',
+        vehSeats: '5 Seater',
+        customerName: 'Rahul Sharma',
+        quotationDate: '2026-10-13',
+        pickup: '2026-10-14T15:00',
+        return: '2026-10-17T20:00',
+        ratePerDay: '1500',
+        extraHourRate: '100',
+        includedKM: '650',
+        extraKMRate: '7',
+        deposit: '4000',
+        token: '1000',
+        discountType: 'amount',
+        discountValue: '500',
+        terms: 'Remaining rental amount and security deposit must be paid at vehicle handover.\nThe {deposit} security deposit is refundable after inspection.'
+      },
+      expect: { payable: 7500 },
+      textExpect: [
+        '\uD83D\uDE97 *SHREE SELF DRIVING & CAR RENTAL SERVICE*',
+        '*SELF DRIVE QUOTATION*',
+        '\u2022 Prepared For: Rahul Sharma',
+        '\u2022 Quotation Date: 13 October 2026',
+        '\u2022 Rental Charges (\u20B91,500 \u00D7 3 Days): \u20B94,500',
+        '\u2022 Extra Hours (5 \u00D7 \u20B9100): \u20B9500',
+        '\u2022 *Total Duration: 3 Days 5 Hours*',
+        '\u2022 Included KM Limit: 650 KM',
+        '\u2022 Extra KM Charges: \u20B97 Per KM',
+        '\u2022 Extra Hour Charges: \u20B9100 Per Hour',
+        '\u2022 *Total Rental Amount: \u20B95,000*',
+        '\u2022 Less Offer / Discount: \u2212\u20B9500',
+        '\u2022 Less Token Payment Received: \u2212\u20B91,000',
+        '\u2705 *TOTAL PAYABLE AT HANDOVER: \u20B97,500*',
+        '\u2022 The \u20B94,000 security deposit is refundable after inspection.'
+      ]
+    }
+  ];
+
+  var fields = ['totalHours', 'days', 'includedHours', 'extraHours', 'rental', 'extraHourCharge', 'totalRental', 'discount', 'payable', 'deposit', 'token', 'error'];
+  var passed = 0;
+  var casesHtml = '';
+
+  cases.forEach(function (tc, idx) {
+    var got = RC.compute(tc.input);
+    var rows = '';
+    var caseOk = true;
+
+    fields.forEach(function (f) {
+      if (!(f in tc.expect)) return;
+      var want = tc.expect[f];
+      var mine = got[f];
+      var ok = String(want) === String(mine);
+      if (!ok) caseOk = false;
+      rows += '<tr class="' + (ok ? 'ok' : 'bad') + '">' +
+        '<td>' + (ok ? '\u2705' : '\u274C') + ' ' + esc(f) + '</td>' +
+        '<td>expected: <b>' + esc(want) + '</b></td>' +
+        '<td>got: <b>' + esc(mine) + '</b></td></tr>';
+    });
+
+    if (tc.textExpect) {
+      var text = RC.buildText(RC.buildView(tc.input, got));
+      tc.textExpect.forEach(function (line) {
+        var present = text.indexOf(line) !== -1;
+        if (!present) caseOk = false;
+        rows += '<tr class="' + (present ? 'ok' : 'bad') + '">' +
+          '<td>' + (present ? '\u2705' : '\u274C') + ' text line</td>' +
+          '<td>expected: <b>' + esc(line) + '</b></td>' +
+          '<td>' + (present ? 'present' : '<b>missing</b>') + '</td></tr>';
+      });
+    }
+
+    if (caseOk) passed++;
+
+    casesHtml += '<div class="card testcard">' +
+      '<div class="case-name">' + (idx + 1) + '. ' + esc(tc.name) + ' ' + (caseOk ? '\u2705' : '\u274C') + '</div>' +
+      '<div class="detail">' + esc(tc.input.pickup || '(no pickup)') + ' \u2192 ' + esc(tc.input.return || '(no return)') + '</div>' +
+      '<table><thead><tr><th>Field</th><th>Expected</th><th>Result</th></tr></thead><tbody>' +
+      rows + '</tbody></table></div>';
+  });
+
+  var allOk = passed === cases.length;
+  document.getElementById('result').innerHTML =
+    '<div class="summary-pill ' + (allOk ? 'pass' : 'fail') + '">' +
+    (allOk ? '\u2705 ' : '\u274C ') + passed + ' / ' + cases.length + ' test cases passed</div>';
+
+  document.getElementById('cases').innerHTML = casesHtml;
+})();
+</script>
+</body>
+</html>
